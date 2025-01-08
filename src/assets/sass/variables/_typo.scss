@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&display=swap');
+
+@font-face {
+    font-family: 'Inconsolata';
+    src: url('../fonts/Inconsolata.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+* {
+    font-family: 'Lexend Deca', sans-serif;
+    color: white;
+    margin: 0;
+}
+
+@mixin truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
