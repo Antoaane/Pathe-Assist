@@ -1,39 +1,40 @@
 <script setup>
 // import films from '@/components/format.json'
 import { ref, onMounted, computed  } from 'vue';
+import Film from '@/components/Film.vue'
 
 const films = ref([
     {
         "name": "Le Seigneur des Anneaux: La Guerre des Rohirrim",
         "room": "11",
         "ban": null,
-        "start": "16:45",
+        "start": "11:40",
         "play": "17:05",
-        "end": "19:19"
+        "end": "11:40"
     },
     {
         "name": "Vaiana 2",
         "room": "9",
         "ban": null,
-        "start": "17:30",
+        "start": "11:40",
         "play": "17:50",
-        "end": "19:29"
+        "end": "11:40"
     },
     {
         "name": "Jamais sans mon psy",
         "room": "3",
         "ban": null,
-        "start": "17:50",
+        "start": "11:20",
         "play": "18:10",
-        "end": "19:41"
+        "end": "11:20"
     },
     {
         "name": "Vaiana 2",
         "room": "10",
         "ban": null,
-        "start": "18:30",
+        "start": "11:33",
         "play": "18:50",
-        "end": "20:29"
+        "end": "11:33"
     },
     {
         "name": "Les Femmes au balcon",
@@ -282,40 +283,44 @@ function getIntensity(startTime, index) {
     const currentMinutes = now.getHours() * 60 + now.getMinutes();
     const startMinutes = timeToMinutes(startTime);
     const minBeforeStart = 15;
+    let red = 0
 
     if (currentMinutes >= startMinutes) {
-        return 255; // Si l'heure actuelle est après ou égale à l'heure de début → 255
+        red = 255; // Si l'heure actuelle est après ou égale à l'heure de début → 255
     }
-    if (currentMinutes <= startMinutes - minBeforeStart) {
-        return 0; // Si on est encore plus de 15 min avant → 0
-    }
+    // if (currentMinutes <= startMinutes - minBeforeStart) {
+    //     return 0; // Si on est encore plus de 15 min avant → 0
+    // }
 
     // Calcul linéaire entre 0 et 255
     const progress = (currentMinutes - (startMinutes - minBeforeStart)) / minBeforeStart;
-    const red = Math.round(progress * 255);
+    red = Math.round(progress * 255);
+
+    // console.log(red)
 
     films.value[index].danger = red;
 };
 
-// Valeur réactive pour les intensités de chaque film
-const filmIntensities = computed(() => {
-    return films.value.map(film => ({
-        ...film,
-        intensity: getIntensity(film.start)
-    }));
-});
-
 // Rafraîchir les valeurs toutes les 30 secondes
 onMounted(() => {
+    films.value.map((film, index) => ({
+        ...film,
+        intensity: getIntensity(film.start, index)
+    }));
+
     groupFilms(films);
 
     setInterval(() => {
-        films.value.map((film, index) => ({
-            ...film,
-            intensity: getIntensity(film.start, index)
-        }));
+        films.value.forEach((film, index) => {
+            getIntensity(film.start, index)
+            // console.log(films.value[index].danger);
+        });
+        // films.value.map((film, index) => ({
+        //     ...film,
+        //     intensity: getIntensity(film.start, index)
+        // }));
         groupFilms(films);
-        console.log(films);
+        // console.log(films);
     }, 5000);
 });
 </script>
@@ -323,49 +328,7 @@ onMounted(() => {
 <template>
     <div class="container">
         <div v-for="group in groupedFilms" class="card-group">
-            <div 
-                v-for="film in group" 
-                class="card-component" 
-                :style="{ background : `linear-gradient(92deg, rgba(255, ${255 - film.danger}, ${255 - film.danger}, 0.35) -1.9%, rgba(255, 255, 255, 0.23) 98.59%)` }">
-                <div class="top">
-                    <p class="film-title">
-                        {{ film.name }}
-                    </p>
-                    <p class="ban">
-                        {{ film.ban }}
-                    </p>
-                </div>
-                <div class="main">
-                    <p class="room">
-                        {{ film.room }}
-                    </p>
-                    <div class="line"></div>
-                    <div class="houre">
-                        <svg width="8" height="6" viewBox="0 0 8 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M3 5.5L0.666668 3.37234L1.48333 2.62766L3 4.01064L6.85 0.5L7.66667 1.24468L3 5.5Z" fill="white"/>
-                        </svg>
-                        <p>
-                            {{ film.start }}
-                        </p>
-                    </div>
-                    <div class="houre">
-                        <svg width="7" height="10" viewBox="0 0 7 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M1.58124 8.87054C0.91937 9.34331 0 8.87018 0 8.05681V1.94319C0 1.12982 0.91937 0.656693 1.58124 1.12946L5.86077 4.18627C6.41912 4.58509 6.41912 5.41491 5.86077 5.81373L1.58124 8.87054Z" fill="white"/>
-                        </svg>
-                        <p>
-                            {{ film.play }}
-                        </p>
-                    </div>
-                    <div class="houre">
-                        <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M1.1111 7.5C0.89721 7.5 0.714108 7.42384 0.561793 7.27153C0.409478 7.11921 0.333321 6.93611 0.333321 6.72222V1.27778C0.333321 1.06389 0.409478 0.880787 0.561793 0.728472C0.714108 0.576157 0.89721 0.5 1.1111 0.5H6.55554C6.76943 0.5 6.95253 0.576157 7.10485 0.728472C7.25716 0.880787 7.33332 1.06389 7.33332 1.27778V6.72222C7.33332 6.93611 7.25716 7.11921 7.10485 7.27153C6.95253 7.42384 6.76943 7.5 6.55554 7.5H1.1111Z" fill="white"/>
-                        </svg>
-                        <p>
-                            {{ film.end }}
-                        </p>
-                    </div>
-                </div>
-            </div>
+            <Film v-for="film in group" :film="film"/>
         </div>
     </div>
 </template>
