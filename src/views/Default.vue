@@ -232,12 +232,10 @@ const films = ref([
 
 const groupedFilms = ref([]);
 
-// Convertir "HH:MM" en minutes pour comparaison, en gérant les horaires après minuit
 const timeToMinutes = (time) => {
     let [hours, minutes] = time.split(":").map(Number);
     let totalMinutes = hours * 60 + minutes;
 
-    // Si l'heure est après minuit (00h - 05h), on ajoute 24h (1440 minutes) pour la placer correctement après les heures du soir
     if (hours < 6) {
         totalMinutes += 1440;
     }
@@ -245,9 +243,7 @@ const timeToMinutes = (time) => {
     return totalMinutes;
 };
 
-// Fonction de regroupement
 function groupFilms(films, sort = 'end') {
-    // Trier les films par heure de fin avec gestion des heures après minuit
     const sortedFilms = [...films.value].sort((a, b) => timeToMinutes(a[sort]) - timeToMinutes(b[sort]));
 
     const grouped = [];
@@ -272,7 +268,6 @@ function groupFilms(films, sort = 'end') {
         grouped.push(currentGroup);
     }
 
-    // Trier les groupes en fonction de l'heure de fin du premier film de chaque groupe
     grouped.sort((a, b) => timeToMinutes(a[0][sort]) - timeToMinutes(b[0][sort]));
 
     groupedFilms.value = grouped;
@@ -286,22 +281,15 @@ function getIntensity(startTime, index) {
     let red = 0
 
     if (currentMinutes >= startMinutes) {
-        red = 255; // Si l'heure actuelle est après ou égale à l'heure de début → 255
+        red = 255;
     }
-    // if (currentMinutes <= startMinutes - minBeforeStart) {
-    //     return 0; // Si on est encore plus de 15 min avant → 0
-    // }
 
-    // Calcul linéaire entre 0 et 255
     const progress = (currentMinutes - (startMinutes - minBeforeStart)) / minBeforeStart;
     red = Math.round(progress * 255);
-
-    // console.log(red)
 
     films.value[index].danger = red;
 };
 
-// Rafraîchir les valeurs toutes les 30 secondes
 onMounted(() => {
     films.value.map((film, index) => ({
         ...film,
@@ -313,14 +301,8 @@ onMounted(() => {
     setInterval(() => {
         films.value.forEach((film, index) => {
             getIntensity(film.start, index)
-            // console.log(films.value[index].danger);
         });
-        // films.value.map((film, index) => ({
-        //     ...film,
-        //     intensity: getIntensity(film.start, index)
-        // }));
         groupFilms(films);
-        // console.log(films);
     }, 5000);
 });
 </script>
