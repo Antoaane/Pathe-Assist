@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Default from '@/views/Default.vue'
+import Cleaning from '@/views/Cleaning.vue'
+import Closing from '@/views/Closing.vue'
 import CapturePage from '@/views/CapturePage.vue'
 
 const router = createRouter({
@@ -7,8 +8,18 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'default',
-      component: Default,
+      name: 'home',
+      component: Cleaning,
+    },
+    {
+      path: '/cleaning',
+      name: 'cleaning',
+      component: Cleaning,
+    },
+    {
+      path: '/closing',
+      name: 'closing',
+      component: Closing,
     },
     {
       path: '/capture',

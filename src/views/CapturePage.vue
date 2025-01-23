@@ -1,7 +1,7 @@
 <template>
     <div>
       <input type="file" multiple accept="image/*" @change="handleFileUpload" />
-      <button @click="processImages" :disabled="files.length === 0 || isLoading">
+      <button @click="processImages()" :disabled="files.length === 0 || isLoading">
         Envoyer
       </button>
   
@@ -15,7 +15,12 @@
 <script setup>
 import { ref } from "vue";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import axios from 'axios';
+// import dotenv from 'dotenv';
 
+// dotenv.config();
+
+const githubToken = import.meta.env.VITE_GITHUB_API_TOKEN;
 const API_KEY = "AIzaSyCHJhMchgEq_c8Bk3PXjG-E-7rrjrfgkKI"; // Remplace par ta clé API Gemini
 const genAI = new GoogleGenerativeAI(API_KEY);
 
@@ -87,19 +92,19 @@ function removeDuplicates(jsonArray) {
     return Array.from(uniqueItems.values()); // Retourne un tableau d'objets uniques
 }
 
-const processImages = async () => {
+async function processImages() {
     isLoading.value = true;
     responses.value = [];
 
     for (let i = 0; i < files.value.length; i++) {
         const file = files.value[i];
-        const prompt = `Analyse de l'image. Récupères TOUTES les lignes du tableau de l'image jointe et que tu me les transformes en des objets JSON ayant les caractéristiques suivantes : name, room, ban, start, play, end. Pour les ban, cela correspond simplement à la colonne des interdictions. Inscris-y simplement ce que tu y vois d'écrit.
+        const prompt = `Analyse de l'image. Récupères TOUTES les lignes du tableau de l'image jointe et que tu me les transformes en des objets JSON ayant les caractéristiques suivantes : name, room, ban, start, play, end. Pour les salles, note uniquement le numéro ou nom de la salle (exemple : "8, IMAX, etc" et non "salle 8, salle IMAX etc"). Pour les ban, cela correspond simplement à la colonne des interdictions. Inscris-y simplement ce que tu y vois d'écrit.
 
         Exemple :
         [
             {
                 "name": "Le Seigneur des Anneaux: La Guerre des Rohirrim",
-                "room": "SALLE 11",
+                "room": "11",
                 "ban" : "-12, etc"
                 "start": "16:45",
                 "play": "17:05",
@@ -107,7 +112,7 @@ const processImages = async () => {
             },
             {
                 "name": "Vaiana 2",
-                "room": "SALLE 9",
+                "room": "9",
                 "ban" : "TP"
                 "start": "17:30",
                 "play": "17:50",
@@ -134,6 +139,37 @@ const processImages = async () => {
     isLoading.value = false;
 
     console.log(finalResponse.value);
+    updateGitHubJson(finalResponse.value);
 };
+
+async function updateGitHubJson(newData) {
+    const apiUrl = `https://api.github.com/repos/Antoaane/Pathe-Pattern/contents/pattern.json`;
+
+    try {
+        // Obtenir le SHA du fichier JSON existant (nécessaire pour la mise à jour)
+        const response = await axios.get(apiUrl, {
+            headers: { Authorization: `token ${githubToken}` }
+        });
+
+        const sha = response.data.sha; // SHA de l'ancienne version
+
+        // Encoder les nouvelles données JSON
+        const encodedContent = btoa(unescape(encodeURIComponent(JSON.stringify(newData, null, 2))));
+
+        // Mettre à jour le fichier sur GitHub
+        await axios.put(apiUrl, {
+            message: "Mise à jour automatique du fichier JSON",
+            content: encodedContent,
+            sha, // Nécessaire pour écraser l'ancien fichier
+            branch: 'main'
+        }, {
+            headers: { Authorization: `token ${githubToken}` }
+        });
+
+        console.log("✅ Fichier JSON mis à jour avec succès sur GitHub !");
+    } catch (error) {
+        console.error("❌ Erreur lors de la mise à jour :", error.response ? error.response.data : error);
+    }
+}
 </script>
   

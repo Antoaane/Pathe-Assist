@@ -5,14 +5,11 @@ import { RouterLink, RouterView } from 'vue-router'
 <template>
   <header>
     <nav>
-      <RouterLink to="/" class="nav-link">
-        Début de séance
+      <RouterLink to="/cleaning" class="nav-link">
+        Nettoyage
       </RouterLink>
-      <RouterLink to="/" class="nav-link">
-        Début de film
-      </RouterLink>
-      <RouterLink to="/" class="nav-link">
-        Fin de séance
+      <RouterLink to="/closing" class="nav-link">
+        Fermeture
       </RouterLink>
       <RouterLink to="/capture" class="nav-link">
         Capture

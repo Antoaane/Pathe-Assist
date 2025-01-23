@@ -1,20 +1,44 @@
 <script setup>
-    import { computed } from 'vue';
+    import { computed, onMounted, ref } from 'vue';
 
     const props = defineProps({
-        film: Object
+        film: Object,
+        mode: String
     })
 
+    const filmRef = ref(null);
+
     const boxStyle = computed(() => {
-        return {
-            background: `linear-gradient(92deg, rgba(255, ${255 - props.film.danger}, ${255 - props.film.danger}, 0.35) -1.9%, rgba(255, 255, 255, 0.23) 98.59%)`,
-        };
+        if (props.film.danger > 255) {
+            return {
+                background: `linear-gradient(92deg, rgba(255, 150, 0, 0.35) -1.9%, rgba(255, 255, 255, 0.23) 98.59%)`,
+            };
+        } else if (props.mode == 'closing') {
+            return {
+                background: `linear-gradient(92deg, rgba(255, 255, 255, 0.35) -1.9%, rgba(255, 255, 255, 0.23) 98.59%)`,
+            };
+        } else {
+            return {
+                background: `linear-gradient(92deg, rgba(255, ${255 - props.film.danger}, ${255 - props.film.danger}, 0.35) -1.9%, rgba(255, 255, 255, 0.23) 98.59%)`,
+            };
+        }
+    });
+
+    onMounted(() => {
+        // if (props.film.danger > 255) {
+        //     filmRef.value.calssList = "playing";
+        // }
     });
 </script>
 
 <template>
     <div 
-        class="card-component" 
+        :id="'film-' + props.film.id"
+        :class="{
+            'card-component': true,
+            'to-clean': props.film.mode === 'cleaning' && props.film.closestEnd === true,
+            'to-close': props.film.mode === 'closing' && props.film.closestPlay === true
+        }">
         :style="boxStyle"
     >
         <div class="top">
