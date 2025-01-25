@@ -1,5 +1,5 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
+  import { RouterLink, RouterView } from 'vue-router'
 </script>
 
 <template>
@@ -11,7 +11,7 @@ import { RouterLink, RouterView } from 'vue-router'
       <RouterLink to="/closing" class="nav-link">
         Fermeture
       </RouterLink>
-      <RouterLink to="/capture" class="nav-link">
+      <RouterLink to="/" class="nav-link">
         Capture
       </RouterLink>
     </nav>

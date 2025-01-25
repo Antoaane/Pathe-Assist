@@ -38,7 +38,7 @@
             'card-component': true,
             'to-clean': props.film.mode === 'cleaning' && props.film.closestEnd === true,
             'to-close': props.film.mode === 'closing' && props.film.closestPlay === true
-        }">
+        }"
         :style="boxStyle"
     >
         <div class="top">
