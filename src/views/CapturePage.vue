@@ -24,25 +24,31 @@
     };
 
     const processImages = async () => {
-        for (let i = 0; i < files.value.length; i++) {
-            const formdata = new FormData();
-            formdata.append("image", files.value[i]);
+        try {
+            for (let i = 0; i < files.value.length; i++) {
+                const formdata = new FormData();
+                formdata.append("image", files.value[i]);
 
-            try {
-                const response = await axios.post(`${API_URL}/sessions`, formdata, {
-                    "Authorization": `Bearer ${token.value}`,
-                    "Content-Type": "multipart/form-data"
-                });
+                try {
+                    const response = await axios.post(`${API_URL}/sessions`, formdata, {
+                        headers: {
+                            "Authorization": `Bearer ${token.value}`,
+                            "Content-Type": "multipart/form-data"
+                        }
+                    });
 
-                const data = response.data;
+                    const data = response.data;
 
-                console.log(data);
-            } catch (error) {
-                console.log("message:", error);
+                    console.log(data);
+                } catch (error) {
+                    console.log("message:", error);
+                }
             }
-        }
 
-        window.location.href = "/cleaning";
+            window.location.href = "/cleaning";
+        } catch (err) {
+            console.error(err);
+        }
     }
 
 </script>
@@ -50,7 +56,7 @@
 <template>
     <div>
       <input type="file" multiple accept="image/*" @change="handleFileUpload" />
-      <button @click="processImages()" :disabled="files.length === 0 || isLoading">
+      <button @click="processImages()" :disabled="files.length === 0">
         Envoyer
       </button>
   

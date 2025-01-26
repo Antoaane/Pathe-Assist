@@ -1,92 +1,73 @@
 <script setup>
-import { ref, onMounted  } from 'vue';
-import { groupSessions, timeToMinutes } from '@/utils/sessionsOrder';
-import { setDanger } from '@/utils/sessionsStatus';
-import axios from 'axios';
-import Film from '@/components/Film.vue'
+    import { ref, onMounted  } from 'vue';
+    import { groupSessions, timeToMinutes } from '@/utils/sessionsOrder';
+    import { setDanger, scrollToClosestFilm } from '@/utils/sessionsStatus';
+    import axios from 'axios';
+    import Film from '@/components/Film.vue'
 
-const API_URL = import.meta.env.VITE_API_BASE;
-const token = ref('')
+    const API_URL = import.meta.env.VITE_API_BASE;
+    const token = ref('');
 
-const films = ref([]);
-const filmRefs = ref([]);
-const groupedFilms = ref([]);
+    const films = ref([]);
+    const filmRefs = ref([]);
+    const groupedFilms = ref([]);
 
-function scrollToClosestFilm() {
-    const now = new Date();
-    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+    const fetchSessions = async () => {
+        try {
+            const response = await axios.get(`${API_URL}/sessions`, {
+                headers: {
+                    "Authorization": `Bearer ${token.value}`,
+                    "Accept": "application/json"
+                }
+            });
 
-    let closestFilm = null;
-    let closestDiff = Infinity;
+            const data = response.data;
 
-    films.value.forEach(film => {
-        const filmEndTime = timeToMinutes(film.start);
-        const diff = filmEndTime - currentMinutes;
+            data.forEach((film) => {
+                if (film.next) {
+                    film.danger = setDanger(film.next.start);
+                } else {
+                    film.danger = 0;
+                }
+            })
 
-        if (diff >= 0 && diff < closestDiff) {
-            closestDiff = diff;
-            closestFilm = film;
-        }
-    });
+            groupedFilms.value = groupSessions(data);
 
-    if (closestFilm) {
-        console.log("🎯 Film le plus proche :", closestFilm.id);
-        // Récupérer la référence de l'élément DOM correspondant
-        const filmElement = document.getElementById(`film-${closestFilm.id}`);
-        if (filmElement) {
-            filmElement.scrollIntoView({ behavior: "smooth", block: "center" });
+            return data;
+        } catch (error) {
+            console.error("❌ Erreur lors de la récupération du JSON :", error);
         }
     }
-}
 
-const fetchSessions = async () => {
-    try {
-        const response = await axios.get(`${API_URL}/sessions`, {
-            headers: {
-                "Authorization": `Bearer ${token.value}`,
-                "Accept": "application/json"
-            }
-        });
-
-        const data = response.data;
-
-        data.forEach((film) => {
-            film.danger = setDanger(film.start);
-        })
-
-        groupedFilms.value = groupSessions(data);
-
-        return data;
-    } catch (error) {
-        console.error("❌ Erreur lors de la récupération du JSON :", error);
-    }
-}
-
-async function actualiseData() {
-    films.value = await fetchSessions();
-    console.log(films.value);
-
-    setInterval(async () => {
+    async function actualiseData() {
         films.value = await fetchSessions();
-        console.log(films.value);
+        console.log(groupedFilms.value[0][0]);
 
-        groupedFilms.value = groupSessions(films.value);
-    }, 5000);
-}
+        if (!groupedFilms.value[0][0]) {
+            window.location.href = "/";
+        }
 
-onMounted(() => {
-    token.value = localStorage.getItem("authToken");
-    
-    if (!token.value) {
-        window.location.href = "/login";
+        setInterval(async () => {
+            films.value = await fetchSessions();
+            console.log(groupedFilms.value);
+
+            groupedFilms.value = groupSessions(films.value);
+        }, 5000);
     }
 
-    actualiseData()
+    onMounted(() => {
+        token.value = localStorage.getItem("authToken");
+        
+        if (!token.value) {
+            window.location.href = "/login";
+        }
 
-    setTimeout(() => {
-        scrollToClosestFilm()
-    }, 750);
-});
+        actualiseData();
+
+        setTimeout(() => {
+            scrollToClosestFilm(films.value, 'end')
+        }, 750);
+    });
 </script>
 
 <template>

@@ -16,3 +16,30 @@ export function setDanger(startTime) {
 
     return red;
 }
+
+export function scrollToClosestFilm(sessions, timeType) {
+    const now = new Date();
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+    let closestFilm = null;
+    let closestDiff = Infinity;
+
+    sessions.forEach(film => {
+        const filmTime = timeToMinutes(film[timeType]);
+        const diff = filmTime - currentMinutes;
+
+        if (diff >= 0 && diff < closestDiff) {
+            closestDiff = diff;
+            closestFilm = film;
+        }
+    });
+
+    if (closestFilm) {
+        console.log("🎯 Film le plus proche :", closestFilm.id);
+        // Récupérer la référence de l'élément DOM correspondant
+        const filmElement = document.getElementById(`film-${closestFilm.id}`);
+        if (filmElement) {
+            filmElement.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+    }
+}

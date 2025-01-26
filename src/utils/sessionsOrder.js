@@ -35,22 +35,22 @@ export function groupSessions(films, sort = 'end') {
 
     grouped.sort((a, b) => timeToMinutes(a[0][sort]) - timeToMinutes(b[0][sort]));
 
-    // Ajouter la séance suivante la plus proche dans la même salle pour chaque film
-    for (const group of grouped) {
-        for (const film of group) {
-            const currentEndTime = timeToMinutes(film[sort]);
+    // // Ajouter la séance suivante la plus proche dans la même salle pour chaque film
+    // for (const group of grouped) {
+    //     for (const film of group) {
+    //         const currentEndTime = timeToMinutes(film[sort]);
 
-            // Trouver la séance suivante la plus proche dans la même salle
-            const nextSession = films.find(
-                (f) => f.room === film.room && timeToMinutes(f.start) > currentEndTime
-            );
+    //         // Trouver la séance suivante la plus proche dans la même salle
+    //         const nextSession = films.find(
+    //             (f) => f.room === film.room && timeToMinutes(f.start) > currentEndTime
+    //         );
 
-            // Ajouter la séance suivante trouvée ou null si aucune n'existe
-            film.nextSession = nextSession ? nextSession.start : null;
-        }
-    }
+    //         // Ajouter la séance suivante trouvée ou null si aucune n'existe
+    //         film.nextSession = nextSession ? nextSession.start : null;
+    //     }
+    // }
 
-    console.log(grouped);
+    // console.log(grouped);
 
     return grouped;
 };

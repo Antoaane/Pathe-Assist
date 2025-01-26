@@ -1,27 +1,38 @@
 <script setup>
     import { computed, onMounted, ref } from 'vue';
+    import axios  from 'axios';
 
     const props = defineProps({
         film: Object,
         mode: String
     })
 
+    const API_URL = import.meta.env.VITE_API_BASE;
+    const token = ref('');
+
+    onMounted(() => { 
+        token.value = localStorage.getItem("authToken");
+    });
+
     const filmRef = ref(null);
 
     const boxStyle = computed(() => {
-        if (props.film.danger > 255) {
-            return {
-                background: `linear-gradient(92deg, rgba(255, 150, 0, 0.35) -1.9%, rgba(255, 255, 255, 0.23) 98.59%)`,
-            };
-        } else if (props.mode == 'closing') {
-            return {
-                background: `linear-gradient(92deg, rgba(255, 255, 255, 0.35) -1.9%, rgba(255, 255, 255, 0.23) 98.59%)`,
-            };
+        if (!props.film.validation) {
+            if (props.film.danger > 255) {
+                return {
+                    background: `linear-gradient(92deg, rgba(255, 150, 0, 0.35) -1.9%, rgba(255, 255, 255, 0.23) 98.59%)`,
+                };
+            } else {
+                return {
+                    background: `linear-gradient(92deg, rgba(255, ${255 - props.film.danger}, ${255 - props.film.danger}, 0.35) -1.9%, rgba(255, 255, 255, 0.23) 98.59%)`,
+                };
+            }
         } else {
             return {
-                background: `linear-gradient(92deg, rgba(255, ${255 - props.film.danger}, ${255 - props.film.danger}, 0.35) -1.9%, rgba(255, 255, 255, 0.23) 98.59%)`,
+                background: `linear-gradient(92deg, rgba(39, 255, 176, 0.35) -1.9%, rgba(255, 255, 255, 0.23) 98.59%)`,
             };
         }
+        
     });
 
     onMounted(() => {
@@ -29,10 +40,32 @@
         //     filmRef.value.calssList = "playing";
         // }
     });
+
+    const toggleState = async (id) => {
+        console.log(id);
+
+        try {
+            const response = await axios.post(`${API_URL}/sessions/${id}`, 
+                { "validationStatus": props.film.validation ? false : true }, {
+                    headers: { // Les en-têtes doivent être dans "headers"
+                        "Authorization": `Bearer ${token.value}`,
+                        "Content-Type": "application/json",
+                    }
+                }
+            );
+
+            const data = response;
+
+            console.log(data);
+        } catch (error) {
+            console.error("❌ Erreur lors de la validation :", error);
+        }
+    }
 </script>
 
 <template>
     <div 
+        @click="toggleState(props.film.id)"
         :id="'film-' + props.film.id"
         :class="{
             'card-component': true,
