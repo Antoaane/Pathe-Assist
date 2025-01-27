@@ -21,11 +21,13 @@ const router = createRouter({
       path: '/cleaning',
       name: 'cleaning',
       component: Cleaning,
+      props: { mode: 'cleared' },
     },
     {
       path: '/closing',
       name: 'closing',
-      component: Closing,
+      component: Cleaning,
+      props: { mode: 'closed' },
     },
   ],
 })

@@ -7,11 +7,8 @@
 
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.10);
-    // background: linear-gradient(92deg, rgba(255, 255, 255, 0.35) -1.9%, rgba(255, 255, 255, 0.23) 98.59%);
-
-    // &.playing {
-    //     background: linear-gradient(92deg, rgba(255, 150, 0, 0.35) -1.9%, rgba(255, 255, 255, 0.23) 98.59%) !important;
-    // }
+    
+    transition: all 0.3s ease-in-out;
 
     .top {
         display: flex;

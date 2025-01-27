@@ -7,6 +7,8 @@
         mode: String
     })
 
+    const mode = props.mode;
+
     const API_URL = import.meta.env.VITE_API_BASE;
     const token = ref('');
 
@@ -17,10 +19,10 @@
     const filmRef = ref(null);
 
     const boxStyle = computed(() => {
-        if (!props.film.validation) {
+        if (!props.film[mode]) {
             if (props.film.danger > 255) {
                 return {
-                    background: `linear-gradient(92deg, rgba(255, 150, 0, 0.35) -1.9%, rgba(255, 255, 255, 0.23) 98.59%)`,
+                    background: `linear-gradient(92deg, rgba(255, 0, 0, 0.35) -1.9%, rgba(255, 255, 255, 0.23) 98.59%)`,
                 };
             } else {
                 return {
@@ -28,26 +30,34 @@
                 };
             }
         } else {
-            return {
-                background: `linear-gradient(92deg, rgba(39, 255, 176, 0.35) -1.9%, rgba(255, 255, 255, 0.23) 98.59%)`,
-            };
+            if (props.film.danger == 256) {
+                return {
+                    background: `linear-gradient(92deg, rgba(255, 190, 0, 0.35) -1.9%, rgba(255, 255, 255, 0.23) 98.59%)`,
+                };
+            } else if (props.film.danger == 257) {
+                return {
+                    background: `linear-gradient(92deg, rgba(255, 150, 0, 0.35) -1.9%, rgba(255, 255, 255, 0.23) 98.59%)`,
+                };
+            } else {
+                return {
+                    background: `linear-gradient(92deg, rgba(39, 255, 176, 0.35) -1.9%, rgba(255, 255, 255, 0.23) 98.59%)`,
+                };
+            }
         }
         
     });
 
-    onMounted(() => {
-        // if (props.film.danger > 255) {
-        //     filmRef.value.calssList = "playing";
-        // }
-    });
-
     const toggleState = async (id) => {
-        console.log(id);
+        // console.log(id);
 
         try {
+            // console.log(props.film[mode]);
             const response = await axios.post(`${API_URL}/sessions/${id}`, 
-                { "validationStatus": props.film.validation ? false : true }, {
-                    headers: { // Les en-têtes doivent être dans "headers"
+                { 
+                    "validationStatus": props.film[mode] ? false : true,
+                    "validationParam": mode
+                }, {
+                    headers: { 
                         "Authorization": `Bearer ${token.value}`,
                         "Content-Type": "application/json",
                     }

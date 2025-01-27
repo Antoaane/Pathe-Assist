@@ -1,10 +1,12 @@
 import { timeToMinutes } from '@/utils/sessionsOrder'
 
-export function setDanger(startTime) {
+export function setDanger(startTime, playTime) {
     const now = new Date();
     const currentMinutes = now.getHours() * 60 + now.getMinutes();
     const startMinutes = timeToMinutes(startTime);
+    const playMinutes = timeToMinutes(playTime);
     const minBeforeStart = 15;
+    const minAfterStart = 20;
     let red = 0;
 
     const progress = (currentMinutes - (startMinutes - minBeforeStart)) / minBeforeStart;
@@ -12,6 +14,16 @@ export function setDanger(startTime) {
 
     if (currentMinutes >= startMinutes) {
         red = 255;
+    }
+
+    if (currentMinutes >= startMinutes) {
+        if (currentMinutes >= (playMinutes + minAfterStart)) {
+            red = 257;
+        } else if (currentMinutes >= (playMinutes)) {
+            red = 256;
+        } else {
+            red = 255;
+        }
     }
 
     return red;

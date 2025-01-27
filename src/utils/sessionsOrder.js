@@ -9,7 +9,7 @@ export function timeToMinutes(time) {
     return totalMinutes;
 };
 
-export function groupSessions(films, sort = 'end') {
+export function groupSessions(films, sort) {
 
     const grouped = [];
     let currentGroup = [films[0]];

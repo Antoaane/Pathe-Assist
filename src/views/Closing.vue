@@ -60,7 +60,9 @@ function getIntensity(startTime, filmTime, endTime, index) {
     red = Math.round(progress * 255);
 
     if (currentMinutes >= startMinutes) {
-        if (currentMinutes >= (playMinutes + 30)) {
+        if (currentMinutes >= (playMinutes + 20)) {
+            red = 257;
+        } else if (currentMinutes >= (playMinutes)) {
             red = 256;
         } else {
             red = 255;

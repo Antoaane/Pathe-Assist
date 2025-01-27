@@ -1,8 +1,8 @@
 <script setup>
     import { ref } from "vue";
     import { onMounted } from 'vue';
-    import { GoogleGenerativeAI } from "@google/generative-ai";
     import axios from 'axios';
+    import { verifyToken } from '@/utils/login'
 
     const API_URL = import.meta.env.VITE_API_BASE;
     const token = ref('')
@@ -10,14 +10,12 @@
     onMounted(() => {
         token.value = localStorage.getItem("authToken");
         
-        if (!token.value) {
+        if (!verifyToken(token.value)) {
             window.location.href = "/login";
         }
     });
 
     const files = ref([]);
-
-    
 
     const handleFileUpload = (event) => {
         files.value = Array.from(event.target.files);
@@ -51,6 +49,21 @@
         }
     }
 
+    const clearSessions = async () => {
+        try {
+            const response = await axios.get(`${API_URL}/sessions/reset`, {
+                headers: {
+                    "Authorization": `Bearer ${token.value}`,
+                    "Accept": "application/json"
+                }
+            });
+
+            console.log(response.data);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
 </script>
 
 <template>
@@ -65,6 +78,7 @@
         <pre>{{ JSON.stringify(finalResponse, null, 2) }}</pre>
       </div> -->
     </div>
+    <button @click="clearSessions()">Clear Sessions</button>
 </template>
 
   
