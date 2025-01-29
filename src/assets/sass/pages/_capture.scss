@@ -1,0 +1,80 @@
+.capture-container {
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    row-gap: $margin;
+
+    .file-container {
+        width: 50%;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        row-gap: $marginS;
+
+        #fileInput {
+            display: none;
+        }
+
+        .file-btn {
+            @include btn-secondary;
+            width: 100%;
+            padding-right: 0;
+            padding-left: 0;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            font-size: 1rem;
+            font-weight: 400;
+        }
+
+        #file-name {
+            max-height: 3rem;
+            padding: $marginS 0;
+
+            font-size: $margin;
+            font-weight: 300;
+            font-style: italic;
+            text-align: center;
+        }
+
+        .send-btn {
+            width: 100%;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            font-size: 1rem;
+
+            @include btn;
+        }
+    }
+
+    .undo-container {
+        padding-bottom: 3rem;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        row-gap: $margin;
+
+        &>button {
+            @include btn-tertiary;
+            font-size: 1.05rem;
+        }
+    
+        .logout-btn {
+            font-size: 1.05rem;
+            // &:hover {
+                color: rgb(255, 110, 110);
+            // }
+        }
+    }
+}

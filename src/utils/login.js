@@ -44,6 +44,12 @@ export async function verifyToken(token) {
 
     } catch (error) {
         console.log(error.status);
-        window.location.href = "/login";
+        return false;
     }
+}
+
+export function logout() {
+    localStorage.removeItem("authToken");
+
+    window.location.href = "/login";
 }

@@ -1,0 +1,53 @@
+@mixin btn {
+    padding: 0.5rem 1rem;
+
+    background: $primary;
+    border-radius: 5px;
+    border: 0;
+
+    color: $secondary;
+
+    transition: all 0.5s ease-in-out;
+
+    &:hover {
+        cursor: pointer;
+        background: rgba(255, 255, 255, 0.35);
+        color: $light;
+    }
+}
+
+@mixin btn-secondary {
+    padding: 0.5rem 1rem;
+
+    background: rgba(255, 255, 255, 0.35);
+    border-radius: 5px;
+    border: 0;
+
+    color: $light;
+
+    transition: all 0.5s ease-in-out;
+
+    &:hover {
+        cursor: pointer;
+        background: $primary;
+        color: $secondary;
+    }
+}
+
+@mixin btn-tertiary {
+    padding: 0.5rem 1rem;
+
+    background: rgba(255, 255, 255, 0);
+    border-radius: 5px;
+    border: 0;
+
+    color: $light;
+
+    transition: all 0.5s ease-in-out;
+
+    &:hover {
+        cursor: pointer;
+        // background: $primary;
+        color: $primary;
+    }
+}

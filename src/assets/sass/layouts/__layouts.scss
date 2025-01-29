@@ -7,13 +7,28 @@
 // ------------------ OTHER ------------------ //
 
 body {
+    height: 100vh;
+
     margin: 0;
     padding: 0;
     background: $black;
+
+    #app {
+        height: 100%;
+        
+        main {
+            height: 100%;
+        }
+
+        header ~ main {
+            padding-top: $navSpacing;
+            height: calc(100% - $navSpacing);
+        }
+    }
 }
 
 .container {
-    padding: 0.75rem;
+    padding: 0 0.75rem 0.75rem 0.75rem;
 
     display: flex;
     flex-direction: column;

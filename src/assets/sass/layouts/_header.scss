@@ -1,3 +1,63 @@
 header {
+    width: calc(100% - 2 * $margin);
+    padding: $margin;
+
+    position: fixed;
+    z-index: 999;
     
+    nav {
+        width: calc(100% - 2 * $marginS);
+        height: 40px;
+        padding: $marginS;
+
+        position: relative;
+
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        gap: $marginS;
+
+        background: linear-gradient(92deg, rgba(255, 255, 255, 0.35) -1.9%, rgba(255, 255, 255, 0.23) 98.59%);
+        backdrop-filter: blur(10px);
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.10);
+
+        .nav-link {
+            width: 100%;
+            height: 100%;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            border-radius: 5px;
+            background-color: #00000000;
+
+            text-decoration: none;
+            color: $light;
+
+            transition: all 0.5s ease-in-out;
+        }
+
+        .router-link-active {
+            // background-color: $primary;
+            color: $secondary;
+        }
+
+        #active-bg {
+            width: calc((100% / 3) - 2 * $marginS);
+            height: calc(100% - 2 * $marginS);
+
+            position: absolute;
+            top: $marginS;
+            z-index: -1;
+
+            background-color: $primary;
+            border-radius: 5px;
+
+            transform: translateX(calc(-100% - 1rem));
+
+            transition: all 0.125s ease-in-out;
+        }
+    }
 }

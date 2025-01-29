@@ -13,16 +13,12 @@ export function setDanger(startTime, playTime) {
     red = Math.round(progress * 255);
 
     if (currentMinutes >= startMinutes) {
-        red = 255;
-    }
-
-    if (currentMinutes >= startMinutes) {
-        if (currentMinutes >= (playMinutes + minAfterStart)) {
+        if (currentMinutes >= (playMinutes + minAfterStart)) { // film commencé depuis "minAfterStart" minutes
             red = 257;
-        } else if (currentMinutes >= (playMinutes)) {
+        } else if (currentMinutes >= (playMinutes)) { // film commencé
             red = 256;
         } else {
-            red = 255;
+            red = 255; // film non-commencé
         }
     }
 
@@ -53,5 +49,38 @@ export function scrollToClosestFilm(sessions, timeType) {
         if (filmElement) {
             filmElement.scrollIntoView({ behavior: "smooth", block: "center" });
         }
+    }
+}
+
+let socket = null;
+
+export function setupWebSocket(actionToTrigger) {
+    socket = new WebSocket('ws://localhost:5000'); 
+
+    // Quand le WebSocket est ouvert
+    socket.onopen = () => {
+        console.log('Connexion WebSocket établie.');
+    };
+
+    // Quand un message est reçu
+    socket.onmessage = (event) => {
+        actionToTrigger();
+    };
+
+    // Quand le WebSocket est fermé
+    socket.onclose = () => {
+        console.log('Connexion WebSocket fermée.');
+    };
+
+    // En cas d'erreur
+    socket.onerror = (error) => {
+        console.error('Erreur WebSocket :', error);
+    };
+}
+
+export function cleanupWebSocket() {
+    if (socket) {
+        socket.close(); // Fermer la connexion
+        console.log('Connexion WebSocket nettoyée.');
     }
 }

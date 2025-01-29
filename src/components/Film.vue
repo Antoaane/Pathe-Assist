@@ -1,6 +1,7 @@
 <script setup>
-    import { computed, onMounted, ref } from 'vue';
+    import { computed, onMounted, onUnmounted, ref } from 'vue';
     import axios  from 'axios';
+    import { setupWebSocket, cleanupWebSocket } from '@/utils/sessionsStatus';
 
     const props = defineProps({
         film: Object,
@@ -16,42 +17,58 @@
         token.value = localStorage.getItem("authToken");
     });
 
-    const filmRef = ref(null);
-
     const boxStyle = computed(() => {
-        if (!props.film[mode]) {
-            if (props.film.danger > 255) {
-                return {
-                    background: `linear-gradient(92deg, rgba(255, 0, 0, 0.35) -1.9%, rgba(255, 255, 255, 0.23) 98.59%)`,
-                };
+        if (mode == 'cleared') {
+            if (!props.film[mode]) {
+                if (props.film.danger > 255) {
+                    return {
+                        background: `linear-gradient(92deg, rgba(255, 0, 0, 0.35) -1.9%, rgba(255, 255, 255, 0.23) 98.59%)`,
+                    };
+                } else {
+                    return {
+                        background: `linear-gradient(92deg, rgba(255, ${255 - props.film.danger}, ${255 - props.film.danger}, 0.35) -1.9%, rgba(255, 255, 255, 0.23) 98.59%)`,
+                    };
+                }
             } else {
-                return {
-                    background: `linear-gradient(92deg, rgba(255, ${255 - props.film.danger}, ${255 - props.film.danger}, 0.35) -1.9%, rgba(255, 255, 255, 0.23) 98.59%)`,
-                };
+                if (props.film.danger == 256) {
+                    return {
+                        background: `linear-gradient(92deg, rgba(255, 190, 0, 0.35) -1.9%, rgba(255, 255, 255, 0.23) 98.59%)`,
+                    };
+                } else if (props.film.danger == 257) {
+                    return {
+                        background: `linear-gradient(92deg, rgba(255, 150, 0, 0.35) -1.9%, rgba(255, 255, 255, 0.23) 98.59%)`,
+                    };
+                } else {
+                    return {
+                        background: `linear-gradient(92deg, rgba(39, 255, 176, 0.35) -1.9%, rgba(255, 255, 255, 0.23) 98.59%)`,
+                    };
+                }
             }
-        } else {
-            if (props.film.danger == 256) {
-                return {
-                    background: `linear-gradient(92deg, rgba(255, 190, 0, 0.35) -1.9%, rgba(255, 255, 255, 0.23) 98.59%)`,
-                };
-            } else if (props.film.danger == 257) {
-                return {
-                    background: `linear-gradient(92deg, rgba(255, 150, 0, 0.35) -1.9%, rgba(255, 255, 255, 0.23) 98.59%)`,
-                };
+        } else if (mode == 'closed') {
+            if (!props.film[mode]) {
+                if (props.film.danger <= 255) {
+                    return {
+                        background: `linear-gradient(92deg, rgba(255, 255, 255, 0.35) -1.9%, rgba(255, 255, 255, 0.23) 98.59%)`,
+                    };
+                } else if (props.film.danger == 256) {
+                    return {
+                        background: `linear-gradient(92deg, rgba(255, 200, 0, 0.35) -1.9%, rgba(255, 255, 255, 0.23) 98.59%)`,
+                    };
+                } else if (props.film.danger == 257) {
+                    return {
+                        background: `linear-gradient(92deg, rgba(255, 130, 0, 0.35) -1.9%, rgba(255, 255, 255, 0.23) 98.59%)`,
+                    };
+                }
             } else {
                 return {
                     background: `linear-gradient(92deg, rgba(39, 255, 176, 0.35) -1.9%, rgba(255, 255, 255, 0.23) 98.59%)`,
                 };
             }
         }
-        
     });
 
     const toggleState = async (id) => {
-        // console.log(id);
-
         try {
-            // console.log(props.film[mode]);
             const response = await axios.post(`${API_URL}/sessions/${id}`, 
                 { 
                     "validationStatus": props.film[mode] ? false : true,

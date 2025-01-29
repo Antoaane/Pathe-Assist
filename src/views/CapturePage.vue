@@ -2,7 +2,7 @@
     import { ref } from "vue";
     import { onMounted } from 'vue';
     import axios from 'axios';
-    import { verifyToken } from '@/utils/login'
+    import { verifyToken, logout } from '@/utils/login'
 
     const API_URL = import.meta.env.VITE_API_BASE;
     const token = ref('')
@@ -13,6 +13,8 @@
         if (!verifyToken(token.value)) {
             window.location.href = "/login";
         }
+
+        handleFileName()
     });
 
     const files = ref([]);
@@ -64,21 +66,34 @@
         }
     }
 
+    function handleFileName() {
+        document.getElementById('fileInput').addEventListener('change', function(event) {
+            const fileNameDisplay = document.getElementById('file-name');
+            if (this.files.length > 0) {
+                fileNameDisplay.textContent = Array.from(this.files).map(file => file.name).join(', ');
+            } else {
+                fileNameDisplay.textContent = 'Aucun fichier sélectionné';
+            }
+        });
+    }
 </script>
 
 <template>
-    <div>
-      <input type="file" multiple accept="image/*" @change="handleFileUpload" />
-      <button @click="processImages()" :disabled="files.length === 0">
-        Envoyer
-      </button>
-  
-      <!-- <div v-if="finalResponse">
-        <h3>Résultat final :</h3>
-        <pre>{{ JSON.stringify(finalResponse, null, 2) }}</pre>
-      </div> -->
+    <div class="capture-container">
+        <span></span>
+        <div class="file-container">
+            <input id="fileInput" type="file" multiple accept="image/*" @change="handleFileUpload" />
+            <span id="file-name">Aucun fichier sélectionné</span>
+            <label for="fileInput" class="file-btn">Sélectionner les images</label>
+            <button class="send-btn" @click="processImages()" :disabled="files.length === 0">
+                Envoyer
+            </button>
+        </div>
+        <div class="undo-container">
+            <button class="clear-btn" @click="clearSessions()">Clear Sessions</button>
+            <button class="logout-btn" @click="logout()">Se déconnecter</button>
+        </div>
     </div>
-    <button @click="clearSessions()">Clear Sessions</button>
 </template>
 
   

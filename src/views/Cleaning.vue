@@ -1,7 +1,7 @@
 <script setup>
     import { ref, onMounted, onUnmounted } from 'vue';
     import { groupSessions, timeToMinutes } from '@/utils/sessionsOrder';
-    import { setDanger, scrollToClosestFilm } from '@/utils/sessionsStatus';
+    import { setDanger, scrollToClosestFilm, setupWebSocket, cleanupWebSocket } from '@/utils/sessionsStatus';
     import { verifyToken } from '@/utils/login'
     import axios from 'axios';
     import Film from '@/components/Film.vue'
@@ -14,42 +14,10 @@
     })
 
     const mode = props.mode;
-    let socket = null;
 
     const films = ref([]);
     const filmRefs = ref([]);
     const groupedFilms = ref([]);
-
-    function setupWebSocket() {
-        socket = new WebSocket('ws://localhost:5000'); 
-
-        // Quand le WebSocket est ouvert
-        socket.onopen = () => {
-            console.log('Connexion WebSocket établie.');
-        };
-
-        // Quand un message est reçu
-        socket.onmessage = (event) => {
-            fetchSessions();
-        };
-
-        // Quand le WebSocket est fermé
-        socket.onclose = () => {
-            console.log('Connexion WebSocket fermée.');
-        };
-
-        // En cas d'erreur
-        socket.onerror = (error) => {
-            console.error('Erreur WebSocket :', error);
-        };
-    }
-
-    function cleanupWebSocket() {
-        if (socket) {
-            socket.close(); // Fermer la connexion
-            console.log('Connexion WebSocket nettoyée.');
-        }
-    }
 
     const fetchSessions = async () => {
         try {
@@ -64,7 +32,7 @@
 
             data.forEach((film) => {
                 if (film.next) {
-                    film.danger = setDanger(film.next.start, film.play);
+                    film.danger = setDanger(mode == 'cleared' ? film.next.start : film.start, film.play);
                 } else {
                     film.danger = 0;
                 }
@@ -86,13 +54,19 @@
     onMounted(() => {
         token.value = localStorage.getItem("authToken");
         
-        verifyToken(token.value);
+        if (!verifyToken(token.value)) {
+            window.location.href = "/login";
+        };
 
-        setupWebSocket();
+        setupWebSocket(fetchSessions);
 
         setTimeout(() => {
             scrollToClosestFilm(films.value, mode == 'cleared' ? 'end' : 'start')
         }, 750);
+
+        setInterval(async () => {
+            await fetchSessions();
+        }, 30000);
     });
 
     onUnmounted(() => {

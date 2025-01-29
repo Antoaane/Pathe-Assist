@@ -1,21 +1,59 @@
 <script setup>
+  import { onMounted, onUpdated , ref } from 'vue';
   import { RouterLink, RouterView } from 'vue-router'
+  import { verifyToken } from '@/utils/login'
+
+  const activeScreen = ref('')
+  const token = ref('');
+  const tokenVerification = ref(false);
+
+  onMounted(async () => {
+    token.value = localStorage.getItem("authToken");
+
+    onUpdated(async () => {
+      tokenVerification.value = await verifyToken(token.value);
+      console.log('validation :', tokenVerification.value);
+
+      activeScreen.value = document.querySelector(".router-link-active");
+      placeBackground(activeScreen.value.id);
+      console.log("écran actif :", activeScreen.value);
+    });
+  });
+  
+
+  function placeBackground(activeScreen) {
+
+    const bg = document.getElementById('active-bg');
+
+    if (activeScreen == 'cleared') {
+      bg.style.transform = 'translateX(calc(-100% - 1rem))';
+    } else if (activeScreen == 'capture') {
+      bg.style.transform = 'translateX(calc(100% + 1rem))';
+    } else {
+      bg.style.transform = 'translateX(0)';
+    }
+  }
+
 </script>
 
 <template>
-  <header>
+  <header v-if="tokenVerification">
     <nav>
-      <RouterLink to="/cleaning" class="nav-link">
+      <span id="active-bg"></span>
+      <RouterLink id="cleared" to="/cleaning" class="nav-link">
         Nettoyage
       </RouterLink>
-      <RouterLink to="/closing" class="nav-link">
+      <RouterLink id="closed" to="/closing" class="nav-link">
         Fermeture
       </RouterLink>
-      <RouterLink to="/" class="nav-link">
+      <RouterLink id="capture" to="/" class="nav-link">
         Capture
       </RouterLink>
     </nav>
   </header>
 
-  <RouterView />
+  <main>
+    <RouterView :key="$route.name" />
+  </main>
+  
 </template>
