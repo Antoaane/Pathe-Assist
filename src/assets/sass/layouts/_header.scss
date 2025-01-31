@@ -1,25 +1,26 @@
 header {
-    width: calc(100% - 2 * $margin);
-    padding: $margin;
+    width: 100%;
+    // width: calc(100% - 2 * $margin);
+    // padding: $margin;
 
     position: fixed;
     z-index: 999;
     
     nav {
-        width: calc(100% - 2 * $marginS);
-        height: 40px;
-        padding: $marginS;
+        width: calc(100% - 2 * $margin-s);
+        height: 50px;
+        padding: $margin-s;
 
         position: relative;
 
         display: flex;
         justify-content: space-around;
         align-items: center;
-        gap: $marginS;
+        gap: $margin-s;
 
-        background: linear-gradient(92deg, rgba(255, 255, 255, 0.35) -1.9%, rgba(255, 255, 255, 0.23) 98.59%);
-        backdrop-filter: blur(10px);
-        border-radius: 10px;
+        background: linear-gradient(92deg, rgba($secondary, 0.75) -2%, rgba($secondary, 0.5) 100%);
+        backdrop-filter: blur(20px);
+        // border-radius: $rounded-l;
         border: 1px solid rgba(255, 255, 255, 0.10);
 
         .nav-link {
@@ -30,13 +31,18 @@ header {
             justify-content: center;
             align-items: center;
 
-            border-radius: 5px;
+            border-radius: $rounded-s;
             background-color: #00000000;
 
             text-decoration: none;
             color: $light;
 
-            transition: all 0.5s ease-in-out;
+            transition: all 0.3s ease-in-out;
+
+            &.unable {
+                pointer-events: none;
+                color: rgba($light, 0.25);
+            }
         }
 
         .router-link-active {
@@ -45,19 +51,19 @@ header {
         }
 
         #active-bg {
-            width: calc((100% / 3) - 2 * $marginS);
-            height: calc(100% - 2 * $marginS);
+            width: calc((100% / 3) - 2 * $margin-s);
+            height: calc(100% - 2 * $margin-s);
 
             position: absolute;
-            top: $marginS;
+            top: $margin-s;
             z-index: -1;
 
             background-color: $primary;
-            border-radius: 5px;
+            border-radius: $rounded-l;
 
             transform: translateX(calc(-100% - 1rem));
 
-            transition: all 0.125s ease-in-out;
+            transition: all 0.3s ease-in-out;
         }
     }
 }

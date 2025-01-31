@@ -1,3 +1,7 @@
 $margin: 0.75rem;
-$marginS: 0.5rem;
-$navSpacing: calc(40px + 2 * $margin + 2 * $marginS);
+$margin-s: 0.5rem;
+$navSpacing: calc(40px + 2 * $margin + 2 * $margin-s);
+
+$rounded-s: 5px;
+$rounded: 7.5px;
+$rounded-l: 10px;

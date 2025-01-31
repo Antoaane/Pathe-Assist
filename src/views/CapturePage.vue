@@ -5,13 +5,14 @@
     import { verifyToken, logout } from '@/utils/login'
 
     const API_URL = import.meta.env.VITE_API_BASE;
+    const VITE_URL = import.meta.env.VITE_URL;
     const token = ref('')
 
     onMounted(() => {
         token.value = localStorage.getItem("authToken");
         
         if (!verifyToken(token.value)) {
-            window.location.href = "/login";
+            window.location.href = `${VITE_URL}/login`;
         }
 
         handleFileName()
@@ -45,7 +46,7 @@
                 }
             }
 
-            window.location.href = "/cleaning";
+            window.location.href = `${VITE_URL}/cleaning`;
         } catch (err) {
             console.error(err);
         }
@@ -90,8 +91,8 @@
             </button>
         </div>
         <div class="undo-container">
-            <button class="clear-btn" @click="clearSessions()">Clear Sessions</button>
             <button class="logout-btn" @click="logout()">Se déconnecter</button>
+            <button class="clear-btn" @click="clearSessions()">Effacer les sessions</button>
         </div>
     </div>
 </template>

@@ -1,25 +1,38 @@
 <script setup>
   import { onMounted, onUpdated , ref } from 'vue';
   import { RouterLink, RouterView } from 'vue-router'
-  import { verifyToken } from '@/utils/login'
+  import { verifyToken, isData } from '@/utils/login'
 
-  const activeScreen = ref('')
   const token = ref('');
+  const activeScreen = ref('');
   const tokenVerification = ref(false);
+  const dataStatus = ref(false);
+  const VITE_URL = import.meta.env.VITE_URL;
+
+  onUpdated(async () => {
+    dataStatus.value = await isData(token.value);
+  }),
 
   onMounted(async () => {
     token.value = localStorage.getItem("authToken");
 
-    onUpdated(async () => {
-      tokenVerification.value = await verifyToken(token.value);
-      console.log('validation :', tokenVerification.value);
+    tokenVerification.value = await verifyToken(token.value);
+    dataStatus.value = await isData(token.value);
 
-      activeScreen.value = document.querySelector(".router-link-active");
-      placeBackground(activeScreen.value.id);
-      console.log("écran actif :", activeScreen.value);
-    });
+    await setActiveScreen();
+
+    console.log('activeScreen :', activeScreen.value)
+    
+    placeBackground(activeScreen.value.id);
   });
   
+  async function setActiveScreen() {
+    while (!document.querySelector(".router-link-active")) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    activeScreen.value = document.querySelector(".router-link-active");
+    console.log("activeScreen est défini :", activeScreen.value);
+  }
 
   function placeBackground(activeScreen) {
 
@@ -29,8 +42,10 @@
       bg.style.transform = 'translateX(calc(-100% - 1rem))';
     } else if (activeScreen == 'capture') {
       bg.style.transform = 'translateX(calc(100% + 1rem))';
-    } else {
+    } else if (activeScreen == 'closed') {
       bg.style.transform = 'translateX(0)';
+    } else {
+      console.log('bad id :', activeScreen);
     }
   }
 
@@ -40,13 +55,13 @@
   <header v-if="tokenVerification">
     <nav>
       <span id="active-bg"></span>
-      <RouterLink id="cleared" to="/cleaning" class="nav-link">
+      <RouterLink @click="placeBackground('cleared')" id="cleared" :to="`${VITE_URL}/cleaning`" :class="{'nav-link': true, 'unable': !dataStatus }">
         Nettoyage
       </RouterLink>
-      <RouterLink id="closed" to="/closing" class="nav-link">
+      <RouterLink @click="placeBackground('closed')" id="closed" :to="`${VITE_URL}/closing`" :class="{'nav-link': true, 'unable': !dataStatus }">
         Fermeture
       </RouterLink>
-      <RouterLink id="capture" to="/" class="nav-link">
+      <RouterLink @click="placeBackground('capture')" id="capture" :to="VITE_URL" class="nav-link">
         Capture
       </RouterLink>
     </nav>

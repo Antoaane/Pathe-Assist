@@ -2,7 +2,7 @@
     padding: 0.5rem 1rem;
 
     background: $primary;
-    border-radius: 5px;
+    border-radius: $rounded-s;
     border: 0;
 
     color: $secondary;
@@ -20,7 +20,7 @@
     padding: 0.5rem 1rem;
 
     background: rgba(255, 255, 255, 0.35);
-    border-radius: 5px;
+    border-radius: $rounded-s;
     border: 0;
 
     color: $light;
@@ -38,7 +38,7 @@
     padding: 0.5rem 1rem;
 
     background: rgba(255, 255, 255, 0);
-    border-radius: 5px;
+    border-radius: $rounded-s;
     border: 0;
 
     color: $light;

@@ -58,23 +58,21 @@
 }
 
 header {
-  width: calc(100% - 1.5rem);
-  padding: 0.75rem;
+  width: 100%;
   position: fixed;
   z-index: 999;
 }
 header nav {
   width: calc(100% - 1rem);
-  height: 40px;
+  height: 50px;
   padding: 0.5rem;
   position: relative;
   display: flex;
   justify-content: space-around;
   align-items: center;
   gap: 0.5rem;
-  background: linear-gradient(92deg, rgba(255, 255, 255, 0.35) -1.9%, rgba(255, 255, 255, 0.23) 98.59%);
-  backdrop-filter: blur(10px);
-  border-radius: 10px;
+  background: linear-gradient(92deg, rgba(50, 52, 57, 0.75) -2%, rgba(50, 52, 57, 0.5) 100%);
+  backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 header nav .nav-link {
@@ -87,7 +85,11 @@ header nav .nav-link {
   background-color: rgba(0, 0, 0, 0);
   text-decoration: none;
   color: #FFF;
-  transition: all 0.5s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+header nav .nav-link.unable {
+  pointer-events: none;
+  color: rgba(255, 255, 255, 0.25);
 }
 header nav .router-link-active {
   color: #323439;
@@ -99,9 +101,9 @@ header nav #active-bg {
   top: 0.5rem;
   z-index: -1;
   background-color: #FEB91E;
-  border-radius: 5px;
+  border-radius: 10px;
   transform: translateX(calc(-100% - 1rem));
-  transition: all 0.125s ease-in-out;
+  transition: all 0.3s ease-in-out;
 }
 
 body {

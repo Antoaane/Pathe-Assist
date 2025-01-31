@@ -21,7 +21,7 @@ export async function login(cinemaId, password) {
 
         if (data.newToken) {
             localStorage.setItem("authToken", data.newToken);
-            window.location.href = "/";
+            window.location.href = "/cleaning";
         }
 
     } catch (error) {
@@ -48,8 +48,31 @@ export async function verifyToken(token) {
     }
 }
 
+export async function isData(token) {
+    try {
+        const response = await axios.get(`${API_URL}/sessions`, {
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Accept": "application/json"
+            }
+        });
+
+        console.log('data :', response.data.length)
+        
+        if (response.data.length !== 0) {
+            return true;
+        } else {
+            return false;
+        }
+
+    } catch (error) {
+        console.log(error.status);
+        return false;
+    }
+}
+
 export function logout() {
     localStorage.removeItem("authToken");
 
-    window.location.href = "/login";
+    window.location.href = `${VITE_URL}/login`;
 }
