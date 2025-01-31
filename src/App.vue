@@ -55,13 +55,13 @@
   <header v-if="tokenVerification">
     <nav>
       <span id="active-bg"></span>
-      <RouterLink @click="placeBackground('cleared')" id="cleared" :to="`${VITE_URL}/cleaning`" :class="{'nav-link': true, 'unable': !dataStatus }">
+      <RouterLink @click="placeBackground('cleared')" id="cleared" to="/cleaning" :class="{'nav-link': true, 'unable': !dataStatus }">
         Nettoyage
       </RouterLink>
-      <RouterLink @click="placeBackground('closed')" id="closed" :to="`${VITE_URL}/closing`" :class="{'nav-link': true, 'unable': !dataStatus }">
+      <RouterLink @click="placeBackground('closed')" id="closed" to="/closing" :class="{'nav-link': true, 'unable': !dataStatus }">
         Fermeture
       </RouterLink>
-      <RouterLink @click="placeBackground('capture')" id="capture" :to="VITE_URL" class="nav-link">
+      <RouterLink @click="placeBackground('capture')" id="capture" to="/" class="nav-link">
         Capture
       </RouterLink>
     </nav>

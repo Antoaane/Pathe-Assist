@@ -62,6 +62,7 @@
             });
 
             console.log(response.data);
+            window.location.href = VITE_URL;
         } catch (error) {
             console.error(error);
         }
