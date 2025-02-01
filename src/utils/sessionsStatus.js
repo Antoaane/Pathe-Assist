@@ -1,5 +1,7 @@
 import { timeToMinutes } from '@/utils/sessionsOrder'
 
+const WS_URL = import.meta.env.VITE_WS_URL;
+
 export function setDanger(startTime, playTime) {
     const now = new Date();
     const currentMinutes = now.getHours() * 60 + now.getMinutes();
@@ -55,7 +57,7 @@ export function scrollToClosestFilm(sessions, timeType) {
 let socket = null;
 
 export function setupWebSocket(actionToTrigger) {
-    socket = new WebSocket('ws://localhost:5000'); 
+    socket = new WebSocket(WS_URL); 
 
     // Quand le WebSocket est ouvert
     socket.onopen = () => {
