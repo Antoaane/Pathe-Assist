@@ -57,7 +57,7 @@ export async function isData(token) {
             }
         });
 
-        console.log('dataaaa :', response)
+        // console.log('dataaaa :', response)
         
         if (response.data.length !== 0) {
             return true;

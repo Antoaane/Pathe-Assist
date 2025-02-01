@@ -8,11 +8,24 @@
     const VITE_URL = import.meta.env.VITE_URL;
     const token = ref('')
 
-    onMounted(() => {
+    onMounted(async () => {
+        try {
+            const response = await axios.get(`${API_URL}/`, {
+                headers: {
+                    // "Authorization": `Bearer ${token}`,
+                    "Accept": "application/json"
+                }
+            });
+            
+            console.log("test :", response);
+        } catch (error) {
+            console.log(error);
+        }
+
         token.value = localStorage.getItem("authToken");
         
         if (!verifyToken(token.value)) {
-            window.location.href = `${VITE_URL}/login`;
+            window.location.href = "/login";
         }
 
         handleFileName()
