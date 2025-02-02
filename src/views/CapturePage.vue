@@ -23,10 +23,6 @@
         }
 
         token.value = localStorage.getItem("authToken");
-        
-        if (!verifyToken(token.value)) {
-            window.location.href = "/login";
-        }
 
         handleFileName()
     });

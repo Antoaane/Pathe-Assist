@@ -9,15 +9,23 @@
   const dataStatus = ref(false);
   const VITE_URL = import.meta.env.VITE_URL;
 
+  token.value = localStorage.getItem("authToken");
+
+  if (!token.value && window.location.pathname !== "/login") {
+    window.location.href = "/login";
+  }
+
   onUpdated(async () => {
     dataStatus.value = await isData(token.value);
   }),
 
   onMounted(async () => {
-    token.value = localStorage.getItem("authToken");
-
     tokenVerification.value = await verifyToken(token.value);
     dataStatus.value = await isData(token.value);
+
+    if (!tokenVerification.value && window.location.pathname !== "/login") {
+      window.location.href = "/login";
+    }
 
     await setActiveScreen();
 
@@ -61,13 +69,13 @@
       <RouterLink @click="placeBackground('closed')" id="closed" to="/closing" :class="{'nav-link': true, 'unable': !dataStatus }">
         Fermeture
       </RouterLink>
-      <RouterLink @click="placeBackground('capture')" id="capture" to="/" class="nav-link">
+      <RouterLink @click="placeBackground('capture')" id="capture" to="/capture" class="nav-link">
         Capture
       </RouterLink>
     </nav>
   </header>
 
-  <main>
+  <main v-if="$route">
     <RouterView :key="$route.name" />
   </main>
   

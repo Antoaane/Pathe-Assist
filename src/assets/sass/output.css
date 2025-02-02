@@ -168,11 +168,12 @@ body #app header ~ main {
   display: none;
 }
 .capture-container .file-container .file-btn {
-  padding: 0.5rem 1rem;
+  padding: 0.6rem 1.5rem;
   background: rgba(255, 255, 255, 0.35);
   border-radius: 5px;
   border: 0;
   color: #FFF;
+  font-size: 1.05rem;
   transition: all 0.5s ease-in-out;
   width: 100%;
   padding-right: 0;
@@ -202,11 +203,12 @@ body #app header ~ main {
   justify-content: center;
   align-items: center;
   font-size: 1rem;
-  padding: 0.5rem 1rem;
+  padding: 0.6rem 1.5rem;
   background: #FEB91E;
   border-radius: 5px;
   border: 0;
   color: #323439;
+  font-size: 1.05rem;
   transition: all 0.5s ease-in-out;
 }
 .capture-container .file-container .send-btn:hover {
@@ -223,11 +225,12 @@ body #app header ~ main {
   row-gap: 0.75rem;
 }
 .capture-container .undo-container > button {
-  padding: 0.5rem 1rem;
+  padding: 0.6rem 1.5rem;
   background: rgba(255, 255, 255, 0);
   border-radius: 5px;
   border: 0;
   color: #FFF;
+  font-size: 1.05rem;
   transition: all 0.5s ease-in-out;
   font-size: 1.05rem;
 }
@@ -238,6 +241,41 @@ body #app header ~ main {
 .capture-container .undo-container .logout-btn {
   font-size: 1.05rem;
   color: rgb(255, 110, 110);
+}
+
+.login-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  background-color: #000;
+}
+.login-container input[type=text], .login-container input[type=password] {
+  width: 50%;
+  padding: 0.5rem 0.5rem;
+  background: #323439;
+  border: solid 1px rgba(255, 255, 255, 0.5);
+  border-radius: 5px;
+  font-size: 1.05rem;
+}
+.login-container input[type=text]:focus, .login-container input[type=password]:focus {
+  outline: none;
+}
+.login-container button {
+  padding: 0.6rem 1.5rem;
+  background: #FEB91E;
+  border-radius: 5px;
+  border: 0;
+  color: #323439;
+  font-size: 1.05rem;
+  transition: all 0.5s ease-in-out;
+}
+.login-container button:hover {
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.35);
+  color: #FFF;
 }
 
 /*# sourceMappingURL=output.css.map */

@@ -1,11 +1,12 @@
 @mixin btn {
-    padding: 0.5rem 1rem;
+    padding: 0.6rem 1.5rem;
 
     background: $primary;
     border-radius: $rounded-s;
     border: 0;
 
     color: $secondary;
+    font-size: 1.05rem;
 
     transition: all 0.5s ease-in-out;
 
@@ -17,13 +18,14 @@
 }
 
 @mixin btn-secondary {
-    padding: 0.5rem 1rem;
+    padding: 0.6rem 1.5rem;
 
     background: rgba(255, 255, 255, 0.35);
     border-radius: $rounded-s;
     border: 0;
 
     color: $light;
+    font-size: 1.05rem;
 
     transition: all 0.5s ease-in-out;
 
@@ -35,13 +37,14 @@
 }
 
 @mixin btn-tertiary {
-    padding: 0.5rem 1rem;
+    padding: 0.6rem 1.5rem;
 
     background: rgba(255, 255, 255, 0);
     border-radius: $rounded-s;
     border: 0;
 
     color: $light;
+    font-size: 1.05rem;
 
     transition: all 0.5s ease-in-out;
 

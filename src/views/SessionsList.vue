@@ -44,7 +44,7 @@
             console.log(groupedFilms.value);
 
             if (!groupedFilms.value[0][0] || !films.value) {
-                window.location.href = "/";
+                window.location.href = "/capture";
             }
         } catch (error) {
             console.error("❌ Erreur lors de la récupération du JSON :", error);

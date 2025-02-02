@@ -10,9 +10,9 @@
 </script>
 
 <template>
-    <div>
+    <div class="login-container">
         <input type="text" name="cinema" placeholder="Identifiant" v-model="cinemaId">
-        <input type="text" name="password" placeholder="Mot de passe" v-model="password">
+        <input type="password" name="password" placeholder="Mot de passe" v-model="password">
         <button @click="login(cinemaId, password)">
             Se connecter
         </button>
