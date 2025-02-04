@@ -1,13 +1,14 @@
 <script setup>
   import { onMounted, onUpdated , ref } from 'vue';
   import { RouterLink, RouterView } from 'vue-router'
-  import { verifyToken, isData } from '@/utils/login'
+  import { verifyToken } from '@/utils/login'
+  import { fetchSessions } from '@/utils/sessions'
 
   const token = ref('');
   const activeScreen = ref('');
   const tokenVerification = ref(false);
   const dataStatus = ref(false);
-  const VITE_URL = import.meta.env.VITE_URL;
+  // const VITE_URL = import.meta.env.VITE_URL;
 
   token.value = localStorage.getItem("authToken");
 
@@ -16,23 +17,26 @@
   }
 
   onUpdated(async () => {
-    dataStatus.value = await isData(token.value);
+    tabInit();
   }),
 
   onMounted(async () => {
     tokenVerification.value = await verifyToken(token.value);
-    dataStatus.value = await isData(token.value);
-
+    
     if (!tokenVerification.value && window.location.pathname !== "/login") {
       window.location.href = "/login";
     }
 
-    await setActiveScreen();
-
-    console.log('activeScreen :', activeScreen.value)
-    
-    placeBackground(activeScreen.value.id);
+    tabInit();
   });
+
+  async function tabInit() {
+    dataStatus.value = await fetchSessions() == null ? false : true;
+   
+    await setActiveScreen();
+    console.log('activeScreen :', activeScreen.value);
+    placeBackground(activeScreen.value.id);
+  }
   
   async function setActiveScreen() {
     while (!document.querySelector(".router-link-active")) {

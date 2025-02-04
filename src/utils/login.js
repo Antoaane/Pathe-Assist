@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { onMounted } from 'vue';
+import { saveLocalStorage, getLocalStorage } from '@/utils/tools';
 
 const API_URL = import.meta.env.VITE_API_BASE;
 const VITE_URL = import.meta.env.VITE_URL;
@@ -20,7 +21,7 @@ export async function login(cinemaId, password) {
         console.log(response);
 
         if (data.newToken) {
-            localStorage.setItem("authToken", data.newToken);
+            saveLocalStorage("authToken", data.newToken, 72);
             window.location.href = "/cleaning";
         }
 
@@ -29,7 +30,10 @@ export async function login(cinemaId, password) {
     }
 }
 
-export async function verifyToken(token) {
+export async function verifyToken() {
+
+    const token = getLocalStorage('authToken');
+
     try {
         const response = await axios.get(`${API_URL}/token`, {
             headers: {
@@ -38,32 +42,11 @@ export async function verifyToken(token) {
             }
         });
         
-        console.log(response)
+        console.log(response);
+
+        saveLocalStorage("authToken", token, 72);
 
         return true;
-
-    } catch (error) {
-        console.log(error.status);
-        return false;
-    }
-}
-
-export async function isData(token) {
-    try {
-        const response = await axios.get(`${API_URL}/sessions`, {
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                "Accept": "application/json"
-            }
-        });
-
-        // console.log('dataaaa :', response)
-        
-        if (response.data.length !== 0) {
-            return true;
-        } else {
-            return false;
-        }
 
     } catch (error) {
         console.log(error.status);

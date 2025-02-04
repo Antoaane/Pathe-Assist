@@ -1,21 +1,15 @@
 <script setup>
-    import { computed, onMounted, onUnmounted, ref } from 'vue';
+    import { computed, onMounted, ref } from 'vue';
     import axios  from 'axios';
-    import { setupWebSocket, cleanupWebSocket } from '@/utils/sessionsStatus';
 
     const props = defineProps({
         film: Object,
         mode: String
     })
 
-    const mode = props.mode;
-
     const API_URL = import.meta.env.VITE_API_BASE;
+    const mode = props.mode;
     const token = ref('');
-
-    onMounted(() => { 
-        token.value = localStorage.getItem("authToken");
-    });
 
     const boxStyle = computed(() => {
         if (mode == 'cleared') {
@@ -88,6 +82,10 @@
             console.error("❌ Erreur lors de la validation :", error);
         }
     }
+
+    onMounted(() => { 
+        token.value = localStorage.getItem("authToken");
+    });
 </script>
 
 <template>
