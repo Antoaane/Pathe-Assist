@@ -3,14 +3,16 @@ import { saveLocalStorage, getLocalStorage, timeToMinutes } from '@/utils/tools'
 
 const API_URL = import.meta.env.VITE_API_BASE;
 
-export async function fetchSessions() {
+export async function fetchSessions(force = false) {
     let token = getLocalStorage('authToken');
 
     let data = null;
 
-    data = getLocalStorage('sessions');
+    if (!force) {
+        data = getLocalStorage('sessions');
+    }
 
-    if (!data) {
+    if (force || (!data || data.length == 0)) {
         try {
             const response = await axios.get(`${API_URL}/sessions`, {
                 headers: {
@@ -20,6 +22,8 @@ export async function fetchSessions() {
             });
 
             data = response.data;
+
+            console.log('data :', data);
 
             saveLocalStorage('sessions', data, 11);
         } catch (error) {

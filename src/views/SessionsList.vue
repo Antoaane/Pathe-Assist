@@ -1,18 +1,17 @@
 <script setup>
     import { ref, onMounted, onUnmounted } from 'vue';
-    import { timeToMinutes  } from '@/utils/tools';
+    import { timeToMinutes, getLocalStorage  } from '@/utils/tools';
     import { fetchSessions, organizeSessions } from '@/utils/sessions';
     import { setupWebSocket, cleanupWebSocket } from '@/utils/webSocket';
     import { verifyToken } from '@/utils/login'
     import Film from '@/components/Film.vue'
-
-    const token = ref('');
 
     const props = defineProps({
         mode: String
     })
 
     const mode = props.mode;
+    let intervalId = null;
     const films = ref([]);
     const filmRefs = ref([]);
 
@@ -51,34 +50,37 @@
         }
     }
 
-    const getSessions = async () => {
+    const getSessions = async (force = false) => {
         let sessions = null
         
-        sessions = await fetchSessions();
+        sessions = await fetchSessions(force);
 
-        films.value = organizeSessions(await sessions, mode == 'cleared' ? 'end' : 'start')
+        films.value = organizeSessions(await sessions, mode == 'cleared' ? 'end' : 'start');
+
+        console.log('getSessions :', films.value);
     }
 
-    onMounted(async () => {
-        token.value = localStorage.getItem("authToken");
-        
-        if (!verifyToken(token.value)) {
+    onMounted(async () => {        
+        if (!verifyToken(await getLocalStorage('authToken'))) {
             window.location.href = "/login";
         };
 
         await getSessions();
 
-        setupWebSocket(getSessions);
+        setupWebSocket(() => getSessions(true));
 
         scrollToClosestFilm(films.value, mode == 'cleared' ? 'end' : 'start');
 
-        setInterval(async () => {
+        intervalId = setInterval(async () => {
             await getSessions();
-        }, 30000);
+        }, 10000);
     });
 
     onUnmounted(() => {
         cleanupWebSocket();
+        if (intervalId) {
+            clearInterval(intervalId);
+        }
     });
 </script>
 

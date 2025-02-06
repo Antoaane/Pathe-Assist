@@ -1,6 +1,7 @@
 <script setup>
     import { computed, onMounted, ref } from 'vue';
     import axios  from 'axios';
+    import { getLocalStorage } from '@/utils/tools';
 
     const props = defineProps({
         film: Object,
@@ -9,7 +10,6 @@
 
     const API_URL = import.meta.env.VITE_API_BASE;
     const mode = props.mode;
-    const token = ref('');
 
     const boxStyle = computed(() => {
         if (mode == 'cleared') {
@@ -69,7 +69,7 @@
                     "validationParam": mode
                 }, {
                     headers: { 
-                        "Authorization": `Bearer ${token.value}`,
+                        "Authorization": `Bearer ${await getLocalStorage('authToken')}`,
                         "Content-Type": "application/json",
                     }
                 }
@@ -83,9 +83,31 @@
         }
     }
 
-    onMounted(() => { 
-        token.value = localStorage.getItem("authToken");
-    });
+    // const box = document.getElementById('film-' + props.film.id);
+    // let startX = 0;
+    // let currentX = 0;
+    // let isDragging = false;
+
+    // box.addEventListener("mousedown", (event) => {
+    //     startX = event.clientX - box.offsetLeft;
+    //     isDragging = true;
+    //     box.style.cursor = "grabbing";
+    // });
+
+    // document.addEventListener("mousemove", (event) => {
+    //     if (!isDragging) return;
+
+    //     currentX = event.clientX - startX;
+
+    //     if (currentX >= 50) { // Empêche de revenir en arrière
+    //         box.style.transform = `translateX(${currentX - 50}px)`;
+    //     }
+    // });
+
+    // document.addEventListener("mouseup", () => {
+    //     isDragging = false;
+    //     box.style.cursor = "grab";
+    // });
 </script>
 
 <template>

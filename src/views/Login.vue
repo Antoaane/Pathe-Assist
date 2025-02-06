@@ -2,8 +2,6 @@
     import { ref } from 'vue';
     import { login } from '@/utils/login'
 
-    // const API_URL = import.meta.env.VITE_API_BASE;
-
     const cinemaId = ref('');
     const password = ref('');
 

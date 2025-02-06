@@ -3,27 +3,12 @@
     import { onMounted } from 'vue';
     import axios from 'axios';
     import { verifyToken, logout } from '@/utils/login'
+    import { getLocalStorage } from "@/utils/tools";
 
     const API_URL = import.meta.env.VITE_API_BASE;
     const VITE_URL = import.meta.env.VITE_URL;
-    const token = ref('')
 
     onMounted(async () => {
-        try {
-            const response = await axios.get(`${API_URL}/`, {
-                headers: {
-                    // "Authorization": `Bearer ${token}`,
-                    "Accept": "application/json"
-                }
-            });
-            
-            console.log("test :", response);
-        } catch (error) {
-            console.log(error);
-        }
-
-        token.value = localStorage.getItem("authToken");
-
         handleFileName()
     });
 
@@ -42,7 +27,7 @@
                 try {
                     const response = await axios.post(`${API_URL}/sessions`, formdata, {
                         headers: {
-                            "Authorization": `Bearer ${token.value}`,
+                            "Authorization": `Bearer ${await getLocalStorage('authToken')}`,
                             "Content-Type": "multipart/form-data"
                         }
                     });
@@ -65,13 +50,15 @@
         try {
             const response = await axios.get(`${API_URL}/sessions/reset`, {
                 headers: {
-                    "Authorization": `Bearer ${token.value}`,
+                    "Authorization": `Bearer ${await getLocalStorage('authToken')}`,
                     "Accept": "application/json"
                 }
             });
 
+            localStorage.removeItem('sessions');
+
             console.log(response.data);
-            window.location.href = VITE_URL;
+            window.location.href = `${VITE_URL}/capture`;
         } catch (error) {
             console.error(error);
         }

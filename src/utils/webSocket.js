@@ -12,6 +12,7 @@ export function setupWebSocket(actionToTrigger) {
 
     // Quand un message est reçu
     socket.onmessage = (event) => {
+        console.log("y'a un changement l'équipe :", event);
         actionToTrigger();
     };
 

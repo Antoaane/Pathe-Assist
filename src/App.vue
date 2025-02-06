@@ -3,35 +3,44 @@
   import { RouterLink, RouterView } from 'vue-router'
   import { verifyToken } from '@/utils/login'
   import { fetchSessions } from '@/utils/sessions'
+  import { getLocalStorage } from '@/utils/tools';
 
-  const token = ref('');
   const activeScreen = ref('');
   const tokenVerification = ref(false);
   const dataStatus = ref(false);
   // const VITE_URL = import.meta.env.VITE_URL;
-
-  token.value = localStorage.getItem("authToken");
-
-  if (!token.value && window.location.pathname !== "/login") {
-    window.location.href = "/login";
-  }
 
   onUpdated(async () => {
     tabInit();
   }),
 
   onMounted(async () => {
-    tokenVerification.value = await verifyToken(token.value);
+    tokenVerification.value = await getLocalStorage('authToken');
+    let sessionsFetching = await fetchSessions();
+
+    console.log('sessionsFetching :', sessionsFetching);
     
-    if (!tokenVerification.value && window.location.pathname !== "/login") {
-      window.location.href = "/login";
+    dataStatus.value = sessionsFetching ? sessionsFetching.length == 0 ? false : true : false;
+
+    if (!tokenVerification.value) {
+      if (window.location.pathname !== "/login") {
+        window.location.href = "/login";
+      }
+    } else if (!dataStatus.value) {
+      if (window.location.pathname !== "/capture") {
+        window.location.href = "/capture";
+      }
+    } else if ((window.location.pathname == "")) {
+      window.location.href = "/cleaning";
     }
 
     tabInit();
   });
 
   async function tabInit() {
-    dataStatus.value = await fetchSessions() == null ? false : true;
+    
+
+    // console.log('dataStatus.value : ', dataStatus.value, 'fetchSessions : ', sessionsFetching.length);
    
     await setActiveScreen();
     console.log('activeScreen :', activeScreen.value);

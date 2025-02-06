@@ -1,56 +1,59 @@
-.card-component {
-    padding: 1rem;
-
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-
-    border-radius: $rounded-l;
-    border: 1px solid rgba(255, 255, 255, 0.10);
+// .card-container {
     
-    transition: all 0.5s ease-in-out;
+    .card-component {
+        padding: 1rem;
 
-    .top {
         display: flex;
-        justify-content: space-between;
+        flex-direction: column;
+        gap: 1rem;
 
-        .film-title {
-            max-width: 75%;
-            font-family: 'Inconsolata';
-            @include truncate;
-        }
+        border-radius: $rounded-l;
+        border: 1px solid rgba(255, 255, 255, 0.10);
+        
+        transition: all 0.5s ease-in-out;
 
-        .ban {
-            font-family: 'Inconsolata';
-        }
-    }
-
-    .main {
-        display: flex;
-        justify-content: space-between;
-
-        .room {
-            flex: 1;
-
-            font-size: 2rem;
-            text-align: center;
-        }
-
-        .line {
-            width: 2px;
-            height: 3rem;
-            margin: 0 1rem;
-
-            background: rgba($light, 0.5);
-            border-radius: 999px;
-        }
-
-        .houre {
-            flex: 1;
-
+        .top {
             display: flex;
-            justify-content: space-evenly;
-            align-items: center;
+            justify-content: space-between;
+
+            .film-title {
+                max-width: 75%;
+                font-family: 'Inconsolata';
+                @include truncate;
+            }
+
+            .ban {
+                font-family: 'Inconsolata';
+            }
+        }
+
+        .main {
+            display: flex;
+            justify-content: space-between;
+
+            .room {
+                flex: 1;
+
+                font-size: 2rem;
+                text-align: center;
+            }
+
+            .line {
+                width: 2px;
+                height: 3rem;
+                margin: 0 1rem;
+
+                background: rgba($light, 0.5);
+                border-radius: 999px;
+            }
+
+            .houre {
+                flex: 1;
+
+                display: flex;
+                justify-content: space-evenly;
+                align-items: center;
+            }
         }
     }
-}
+// }
