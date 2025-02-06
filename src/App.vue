@@ -1,7 +1,6 @@
 <script setup>
   import { onMounted, onUpdated , ref } from 'vue';
   import { RouterLink, RouterView } from 'vue-router'
-  import { verifyToken } from '@/utils/login'
   import { fetchSessions } from '@/utils/sessions'
   import { getLocalStorage } from '@/utils/tools';
 

@@ -3,8 +3,8 @@
     import { timeToMinutes, getLocalStorage  } from '@/utils/tools';
     import { fetchSessions, organizeSessions } from '@/utils/sessions';
     import { setupWebSocket, cleanupWebSocket } from '@/utils/webSocket';
-    import { verifyToken } from '@/utils/login'
-    import Film from '@/components/Film.vue'
+    import { verifyToken } from '@/utils/login';
+    import Film from '@/components/Film.vue';
 
     const props = defineProps({
         mode: String

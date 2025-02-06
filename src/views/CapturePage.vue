@@ -4,21 +4,28 @@
     import axios from 'axios';
     import { verifyToken, logout } from '@/utils/login'
     import { getLocalStorage } from "@/utils/tools";
+    import LoadingScreen from "@/components/LoadingScreen.vue"
+    import ValidationScreen from "@/components/ValidationScreen.vue"
 
     const API_URL = import.meta.env.VITE_API_BASE;
     const VITE_URL = import.meta.env.VITE_URL;
 
+    const isLoading = ref(false);
+    const isValidate = ref(false);
+    const action = ref();
+    const files = ref([]);
+
     onMounted(async () => {
         handleFileName()
     });
-
-    const files = ref([]);
 
     const handleFileUpload = (event) => {
         files.value = Array.from(event.target.files);
     };
 
     const processImages = async () => {
+        isLoading.value = true;
+
         try {
             for (let i = 0; i < files.value.length; i++) {
                 const formdata = new FormData();
@@ -44,9 +51,13 @@
         } catch (err) {
             console.error(err);
         }
+
+        isLoading.value = false;
     }
 
     const clearSessions = async () => {
+        isLoading.value = true;
+
         try {
             const response = await axios.get(`${API_URL}/sessions/reset`, {
                 headers: {
@@ -62,6 +73,8 @@
         } catch (error) {
             console.error(error);
         }
+
+        isLoading.value = false;
     }
 
     function handleFileName() {
@@ -74,9 +87,26 @@
             }
         });
     }
+
+    const setAction = (fnctn) => {
+        isValidate.value = true;
+        action.value = fnctn;
+    }
+
+    const validate = (state) => {
+        if (state) {
+            action.value();
+            isValidate.value = false;
+        } else {
+            isValidate.value = false;
+        }
+    }
+
 </script>
 
 <template>
+    <LoadingScreen v-if="isLoading" />
+    <ValidationScreen v-if="isValidate" @validate="validate" />
     <div class="capture-container">
         <span></span>
         <div class="file-container">
@@ -88,8 +118,8 @@
             </button>
         </div>
         <div class="undo-container">
-            <button class="logout-btn" @click="logout()">Se déconnecter</button>
-            <button class="clear-btn" @click="clearSessions()">Effacer les sessions</button>
+            <button class="logout-btn" @click="setAction(logout)">Se déconnecter</button>
+            <button class="clear-btn" @click="setAction(clearSessions)">Effacer les sessions</button>
         </div>
     </div>
 </template>
