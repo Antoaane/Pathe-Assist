@@ -55,7 +55,7 @@
         
         sessions = await fetchSessions(force);
 
-        films.value = organizeSessions(await sessions, mode == 'cleared' ? 'end' : 'start');
+        films.value = organizeSessions(await sessions, mode == 'cleared' ? 'end' : 'play');
 
         console.log('getSessions :', films.value);
     }
@@ -69,7 +69,7 @@
 
         setupWebSocket(() => getSessions(true));
 
-        scrollToClosestFilm(films.value, mode == 'cleared' ? 'end' : 'start');
+        scrollToClosestFilm(films.value, mode == 'cleared' ? 'end' : 'play');
 
         intervalId = setInterval(async () => {
             await getSessions();

@@ -50,7 +50,8 @@ export function organizeSessions(sessions, param) {
     return organizedSessions;
 }
 
-function groupSessions(films, sort) {
+function groupSessions(flms, sort) {
+    const films = sortSessions(flms, sort);
     const grouped = [];
     let currentGroup = [films[0]];
 
@@ -58,13 +59,16 @@ function groupSessions(films, sort) {
         const prevFilm = currentGroup[currentGroup.length - 1];
         const currentFilm = films[i];
 
-        const prevEndTime = timeToMinutes(prevFilm[sort]);
-        const currentEndTime = timeToMinutes(currentFilm[sort]);
+        const prevTime = timeToMinutes(prevFilm[sort]);
+        const currentTime = timeToMinutes(currentFilm[sort]);
 
-        if (currentEndTime - prevEndTime <= 10) {
+        const timeSpacing = sort == "end" ? 15 : 20;
+        console.log(timeSpacing);
+
+        if (currentTime - prevTime <= timeSpacing) {
             currentGroup.push(currentFilm);
         } else {
-            grouped.push(currentGroup);
+            grouped.push(sortSessions(currentGroup, sort));
             currentGroup = [currentFilm];
         }
     }
@@ -75,8 +79,13 @@ function groupSessions(films, sort) {
 
     grouped.sort((a, b) => timeToMinutes(a[0][sort]) - timeToMinutes(b[0][sort]));
 
+
     return grouped;
 };
+
+function sortSessions(sessions, key) {
+    return [...sessions].sort((a, b) => timeToMinutes(a[key]) - timeToMinutes(b[key]));
+}
 
 function setDanger(startTime, playTime) {
     const now = new Date();
