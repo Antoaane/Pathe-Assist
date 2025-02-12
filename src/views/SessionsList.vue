@@ -60,6 +60,13 @@
         console.log('getSessions :', films.value);
     }
 
+    const handleVisibilityChange = () => {
+        if (!document.hidden) {
+            console.log("🔄 Retour sur l'application, re-connexion WebSocket...");
+            setupWebSocket(() => getSessions(true)); // Relancer WebSocket si nécessaire
+        }
+    };
+
     onMounted(async () => {        
         if (!verifyToken(await getLocalStorage('authToken'))) {
             window.location.href = "/login";
@@ -68,6 +75,7 @@
         await getSessions();
 
         setupWebSocket(() => getSessions(true));
+        document.addEventListener("visibilitychange", handleVisibilityChange);
 
         scrollToClosestFilm(films.value, mode == 'cleared' ? 'end' : 'play');
 
